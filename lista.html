@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Funcionários</title>
+    <link rel="stylesheet" href="lista.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cadastro de Funcionários</h1>
+        </header>
+        <div class="actions">
+            <button onclick="window.location.href='cadastro.html'">Adicionar Usuário</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Sobrenome</th>
+                    <th>E-mail</th>
+                    <th>Cargo</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            <tbody id="user-list">
+                <!-- Os dados serão carregados aqui via PHP -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

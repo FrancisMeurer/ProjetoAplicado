@@ -1,0 +1,96 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+}
+
+/* Container principal */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Barra lateral */
+.sidebar {
+    width: 250px;
+    background-color: #343a40;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #495057;
+}
+
+.sidebar a i {
+    margin-right: 10px;
+}
+
+.icon.logout {
+    margin-top: auto;
+}
+
+/* Conteúdo principal */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.main-content header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.main-content .user-info {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Tabela de atualizações */
+.updates table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f8f9fa;
+}
+
+.updates th, .updates td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.updates th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.updates tr:hover {
+    background-color: #f1f1f1;
+}

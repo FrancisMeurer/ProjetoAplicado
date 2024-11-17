@@ -1,0 +1,112 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Estilo da página */
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Imagem de fundo */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('./Imagens/Tela_Login.jpg') no-repeat center center;
+    background-size: cover;
+    opacity: 0.3; /* Ajuste a opacidade conforme necessário */
+    z-index: -2;
+}
+
+/* Overlay para escurecer o fundo */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Ajuste a opacidade conforme necessário */
+    z-index: -1;
+}
+
+/* Container de login */
+.login-container {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+    color: #fff;
+    text-align: center;
+    z-index: 1;
+}
+
+/* Estilo do título */
+h1 {
+    margin-bottom: 20px;
+}
+
+/* Grupo de input */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Botão de login */
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Rodapé */
+.footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+/* Estilo da mensagem de erro */
+.error-message {
+    color: red;
+    background-color: #f8d7da;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}

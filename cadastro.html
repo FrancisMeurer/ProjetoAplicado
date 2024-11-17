@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Funcionários</title>
+    <link rel="stylesheet" href="cadastro.css">
+</head>
+<body>
+    <div class="form-container">
+        <header>
+            <h1>Cadastro de Funcionários</h1>
+        </header>
+        <form method="POST" action="adicionar_usuario.php"> <!-- Adicionando método POST e a ação para enviar o formulário -->
+            <div class="left-panel">
+                <label for="user-id">ID</label>
+                <input type="text" id="user-id" name="user_id" placeholder="ID" readonly> <!-- Adicionando name="user_id" -->
+
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" name="nome" placeholder="Nome" required>
+
+                <label for="sobrenome">Sobrenome</label>
+                <input type="text" id="sobrenome" name="sobrenome" placeholder="Sobrenome" required>
+
+                <label for="sexo">Sexo</label>
+                <input type="text" id="sexo" name="sexo" placeholder="Sexo" required>
+
+                <label for="data_nascimento">Data de Nascimento</label>
+                <input type="date" id="data_nascimento" name="data_nascimento" required>
+
+                <label for="cargo">Cargo</label>
+                <input type="text" id="cargo" name="cargo" placeholder="Cargo" required>
+
+                <label for="email_address">E-mail</label>
+                <input type="email" id="email_address" name="email_address" placeholder="E-mail" required> <!-- Corrigido name="email_address" -->
+
+                <label for="telefone">Telefone</label>
+                <input type="tel" id="telefone" name="telefone" placeholder="Telefone" required>
+            </div>
+            <div class="right-panel">
+                <div class="photo-preview">
+                    <img id="preview-img" src="" alt="Pré-visualização da Foto">
+                </div>
+                <button type="button" id="upload-button" onclick="document.getElementById('upload-photo').click()">Carregar Foto</button>
+                <input type="file" id="upload-photo" accept="image/*" onchange="carregarFoto()" hidden>
+            </div>
+            
+            <textarea name="observacao" placeholder="Observação"></textarea> <!-- Adicionado name="observacao" -->
+            
+            <div class="button-group">
+                <button class="save" type="submit">Salvar</button> <!-- Alterado para type="submit" -->
+                <button class="delete" type="button" onclick="window.location.href='lista.php'">Excluir</button> <!-- Botão de exclusão -->
+                <button class="exit" type="button" onclick="window.location.href='Dashboard.php'">Sair</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="cadastro.js"></script>
+</body>
+</html>

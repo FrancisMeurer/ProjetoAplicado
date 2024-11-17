@@ -1,0 +1,94 @@
+/* Estilo geral */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #4A90E2, #9013FE);
+    color: #fff;
+}
+
+/* Container do formulário */
+.form-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Cabeçalho */
+header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+/* Parágrafos com informações */
+p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+/* Grupo de botões */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Estilo dos botões */
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+/* Cores dos botões */
+button.exit {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+button.save {
+    background-color: #2196F3;
+    color: #fff;
+}
+
+button.delete {
+    background-color: #f44336;
+    color: #fff;
+}
+
+/* Efeitos ao passar o mouse nos botões */
+button:hover {
+    opacity: 0.8;
+}
+
+/* Estilo responsivo para telas menores */
+@media (max-width: 400px) {
+    .form-container {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 1.2rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+    }
+}
