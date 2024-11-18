@@ -3,94 +3,274 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-body {
     font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
 }
 
-/* Container principal */
+/* Contêiner principal */
 .container {
     display: flex;
     height: 100vh;
 }
 
-/* Barra lateral */
+/* Barra lateral (desktop) */
 .sidebar {
-    width: 250px;
-    background-color: #343a40;
-    color: #fff;
+    width: 120px;
+    height: 100vh;
+    background: linear-gradient(to bottom, #99d9ea, #3b5998);
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-}
-
-.sidebar h2 {
-    margin-bottom: 20px;
-}
-
-.sidebar a {
-    text-decoration: none;
-    color: #fff;
-    padding: 10px;
-    margin-bottom: 10px;
-    display: flex;
     align-items: center;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+    padding-top: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.sidebar a:hover {
-    background-color: #495057;
+/* Ícones da barra lateral */
+.icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 15px 0;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.3s;
 }
 
-.sidebar a i {
-    margin-right: 10px;
+.icon i {
+    font-size: 24px;
+    margin-bottom: 5px;
 }
 
-.icon.logout {
-    margin-top: auto;
+.icon span {
+    font-size: 12px;
+}
+
+.icon:hover {
+    background-color: #3b5998;
+    border-radius: 10px;
+}
+
+/* Estilo específico para o botão de Sair */
+.logout {
+    margin-top: auto; /* Garante que o botão fique na parte inferior */
+    background-color: #e74c3c; /* Cor vermelha */
+    border-radius: 10px;
+    padding: 15px 0;
+    width: 100%;
+    text-align: center;
+}
+
+.logout:hover {
+    background-color: #c0392b; /* Cor vermelha mais escura */
 }
 
 /* Conteúdo principal */
 .main-content {
-    flex: 1;
+    margin-left: 120px;
     padding: 20px;
-    background-color: #fff;
+    background: linear-gradient(to right, #d7f0fa, #a0c4ff);
+    flex: 1;
+    overflow-y: auto;
 }
 
-.main-content header {
+/* Cabeçalho */
+header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: linear-gradient(to right, #3b5998, #99d9ea);
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: #fff;
     margin-bottom: 20px;
 }
 
-.main-content .user-info {
-    font-size: 14px;
-    color: #555;
+header h1 {
+    font-size: 1.5em;
 }
 
-/* Tabela de atualizações */
-.updates table {
+.user-info {
+    background: #fff;
+    padding: 5px 10px;
+    border-radius: 15px;
+    color: #3b5998;
+    font-weight: bold;
+}
+
+/* Seção de atualizações */
+.updates {
+    background: #f0f0f0;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.updates h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    color: #3b5998;
+}
+
+/* Estilo da tabela */
+table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #f8f9fa;
 }
 
-.updates th, .updates td {
+th, td {
     padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #dee2e6;
+    text-align: center;
+    border: 1px solid #ccc;
 }
 
-.updates th {
-    background-color: #007bff;
+th {
+    background: linear-gradient(to right, #3b5998, #99d9ea);
     color: #fff;
 }
 
-.updates tr:hover {
-    background-color: #f1f1f1;
+tbody tr:nth-child(even) {
+    background-color: #e0f7fa;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding-bottom: 60px; /* Espaço para a barra de ícones */
+    }
+
+    /* Ajuste da barra lateral para dispositivos móveis */
+    .sidebar {
+        width: 100%;
+        height: 60px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0;
+        background: linear-gradient(to right, #3b5998, #99d9ea);
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon {
+        flex-direction: column;
+        font-size: 12px;
+    }
+
+    .icon i {
+        margin-bottom: 2px;
+    }
+
+    .icon span {
+        display: none; /* Oculta o texto para economizar espaço em telas pequenas */
+    }
+
+    /* Botão de Sair na versão mobile */
+    .logout {
+        background-color: #e74c3c;
+        width: 100%;
+        font-size: 12px;
+    }
+}
+
+/* Estilo para a seção de atualizações recentes */
+.updates-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-form input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #bbb;
+    width: 250px;
+}
+
+.filter-form .btn {
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filter-form .btn:hover {
+    background-color: #1976d2;
+}
+
+/* Estilo para a tabela de atualizações */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #e1f5fe;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #90caf9;
+}
+
+tr:nth-child(even) {
+    background-color: #f1f8e9;
+}
+
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #bbb;
+    width: 250px;
+}
+
+.filter-form .btn {
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filter-form .btn:hover {
+    background-color: #1976d2;
 }

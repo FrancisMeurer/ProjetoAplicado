@@ -5,13 +5,18 @@ include 'conexao.php';
 $id = $_GET['id'] ?? '';
 $nome = $_GET['nome'] ?? '';
 $cargo = $_GET['cargo'] ?? '';
+$setor = $_GET['setor'] ?? '';
 
 // Obter lista de cargos distintos do banco de dados
 $cargos_sql = "SELECT DISTINCT cargo FROM usuarios ORDER BY cargo";
 $cargos_result = $conn->query($cargos_sql);
 
+// Obter lista de setores distintos do banco de dados
+$setores_sql = "SELECT DISTINCT setor FROM usuarios ORDER BY setor";
+$setores_result = $conn->query($setores_sql);
+
 // Preparar a consulta SQL com filtros
-$sql = "SELECT id, nome, sobrenome, email_address, cargo FROM usuarios WHERE 1=1";
+$sql = "SELECT id, nome, sobrenome, email_address, cargo, setor FROM usuarios WHERE 1=1";
 
 if (!empty($id)) {
     $sql .= " AND id = " . intval($id);
@@ -23,6 +28,10 @@ if (!empty($nome)) {
 
 if (!empty($cargo)) {
     $sql .= " AND cargo = '" . $conn->real_escape_string($cargo) . "'";
+}
+
+if (!empty($setor)) {
+    $sql .= " AND setor = '" . $conn->real_escape_string($setor) . "'";
 }
 
 $result = $conn->query($sql);
@@ -66,6 +75,20 @@ $result = $conn->query($sql);
                     ?>
                 </select>
             </div>
+            <div>
+                <label for="setor">Setor:</label>
+                <select name="setor" id="setor">
+                    <option value="">Todos</option>
+                    <?php
+                    if ($setores_result && $setores_result->num_rows > 0) {
+                        while ($row = $setores_result->fetch_assoc()) {
+                            $selected = ($setor === $row['setor']) ? 'selected' : '';
+                            echo "<option value='" . htmlspecialchars($row['setor']) . "' $selected>" . htmlspecialchars($row['setor']) . "</option>";
+                        }
+                    }
+                    ?>
+                </select>
+            </div>
             <button type="submit" class="btn">Filtrar</button>
             <a href="lista.php" class="btn reset-btn">Limpar Filtros</a>
         </form>
@@ -73,6 +96,7 @@ $result = $conn->query($sql);
         <!-- Botões de navegação -->
         <div class="buttons">
             <a href="adicionar_usuario.php" class="btn">Adicionar Usuário</a>
+            <a href="cadastrar_setor.php" class="btn">Cadastrar Setor e Gestor</a>
             <a href="dashboard.php" class="btn">Voltar para o Dashboard</a>
         </div>
 
@@ -85,6 +109,7 @@ $result = $conn->query($sql);
                     <th>Sobrenome</th>
                     <th>E-mail</th>
                     <th>Cargo</th>
+                    <th>Setor</th> <!-- Adicionado setor -->
                     <th>Editar</th>
                 </tr>
             </thead>
@@ -98,12 +123,12 @@ $result = $conn->query($sql);
                         echo "<td>" . $row['sobrenome'] . "</td>";
                         echo "<td>" . $row['email_address'] . "</td>";
                         echo "<td>" . $row['cargo'] . "</td>";
-                        // Substituindo o texto "Editar" por um ícone (fa-edit)
+                        echo "<td>" . $row['setor'] . "</td>"; // Exibindo setor
                         echo "<td><a href='editar_usuario.php?id=" . $row['id'] . "'><i class='fas fa-pencil-alt'></i></a></td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6'>Nenhum usuário encontrado.</td></tr>";
+                    echo "<tr><td colspan='7'>Nenhum usuário encontrado.</td></tr>";
                 }
                 $conn->close();
                 ?>

@@ -14,7 +14,7 @@
         <form method="POST" action="adicionar_usuario.php"> <!-- Adicionando método POST e a ação para enviar o formulário -->
             <div class="left-panel">
                 <label for="user-id">ID</label>
-                <input type="text" id="user-id" name="user_id" placeholder="ID" readonly> 
+                <input type="text" id="user-id" name="user_id" placeholder="ID" readonly> <!-- Adicionando name="user_id" -->
 
                 <label for="nome">Nome</label>
                 <input type="text" id="nome" name="nome" placeholder="Nome" required>
@@ -32,7 +32,7 @@
                 <input type="text" id="cargo" name="cargo" placeholder="Cargo" required>
 
                 <label for="email_address">E-mail</label>
-                <input type="email" id="email_address" name="email_address" placeholder="E-mail" required>
+                <input type="email" id="email_address" name="email_address" placeholder="E-mail" required> <!-- Corrigido name="email_address" -->
 
                 <label for="telefone">Telefone</label>
                 <input type="tel" id="telefone" name="telefone" placeholder="Telefone" required>
@@ -45,11 +45,11 @@
                 <input type="file" id="upload-photo" accept="image/*" onchange="carregarFoto()" hidden>
             </div>
             
-            <textarea name="observacao" placeholder="Observação"></textarea> 
+            <textarea name="observacao" placeholder="Observação"></textarea> <!-- Adicionado name="observacao" -->
             
             <div class="button-group">
-                <button class="save" type="submit">Salvar</button> 
-                <button class="delete" type="button" onclick="window.location.href='lista.php'">Excluir</button> 
+                <button class="save" type="submit">Salvar</button> <!-- Alterado para type="submit" -->
+                <button class="delete" type="button" onclick="window.location.href='lista.php'">Excluir</button> <!-- Botão de exclusão -->
                 <button class="exit" type="button" onclick="window.location.href='Dashboard.php'">Sair</button>
             </div>
         </form>

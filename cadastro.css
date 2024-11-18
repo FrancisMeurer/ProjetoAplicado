@@ -38,7 +38,8 @@ form {
     margin-bottom: 5px;
 }
 
-.left-panel input {
+.left-panel input,
+.left-panel select {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -46,6 +47,29 @@ form {
     border: 1px solid #0288d1;
 }
 
+/* Estilos para a caixa de seleção (checkbox) do Gestor */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.checkbox-container input {
+    margin-right: 10px;
+}
+
+.checkbox-container label {
+    color: #555;
+    font-size: 14px;
+}
+
+.checkbox-container .note {
+    color: #757575;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+/* Painel direito (para a foto) */
 .right-panel {
     width: 35%;
     display: flex;
@@ -125,4 +149,33 @@ button {
 .exit {
     background-color: #ffeb3b;
     color: black;
+}
+
+/* Estilos para o novo campo de setor */
+.setor-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.setor-container select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #0288d1;
+}
+
+.setor-container .new-setor-button {
+    background-color: #0288d1;
+    color: white;
+    padding: 8px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.setor-container .new-setor-button:hover {
+    background-color: #0277bd;
 }

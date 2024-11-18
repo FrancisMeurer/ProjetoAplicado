@@ -27,29 +27,33 @@ if ($id) {
     exit();
 }
 
+// Verificar se a consulta para obter os setores foi bem-sucedida
+$setores_sql = "SELECT DISTINCT setor FROM usuarios ORDER BY setor";
+$setores_result = $conn->query($setores_sql);
+
 // Verificar se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'] ?? '';
     $telefone = $_POST['telefone'] ?? '';
     $cargo = $_POST['cargo'] ?? '';
+    $setor = $_POST['setor'] ?? ''; // Obter o setor selecionado
     $senha_atual = $_POST['senha_atual'] ?? '';
     $nova_senha = $_POST['nova_senha'] ?? '';
     $confirmar_senha = $_POST['confirmar_senha'] ?? '';
 
-    // Verificar se a nova senha foi fornecida e se as senhas coincidem
-    if ($nova_senha && $nova_senha !== $confirmar_senha) {
-        echo "<p style='color: red;'>As senhas não coincidem.</p>";
-    } else {
-        // Atualizar dados do usuário (e-mail, telefone, cargo)
-        $update_sql = "UPDATE usuarios SET email_address = ?, telefone = ?, cargo = ? WHERE id = ?";
-        $stmt = $conn->prepare($update_sql);
-        $stmt->bind_param("sssi", $email, $telefone, $cargo, $id);
+    // Atualizar dados do usuário (e-mail, telefone, cargo e setor)
+    $update_sql = "UPDATE usuarios SET email_address = ?, telefone = ?, cargo = ?, setor = ? WHERE id = ?";
+    $stmt = $conn->prepare($update_sql);
+    $stmt->bind_param("ssssi", $email, $telefone, $cargo, $setor, $id);
 
-        if ($stmt->execute()) {
-            echo "<p>Dados atualizados com sucesso!</p>";
+    if ($stmt->execute()) {
+        echo "<p>Dados atualizados com sucesso!</p>";
 
-            // Se uma nova senha foi fornecida, atualizar a senha
-            if ($nova_senha) {
+        // Atualizar a senha apenas se a nova senha for fornecida
+        if ($nova_senha) {
+            if ($nova_senha !== $confirmar_senha) {
+                echo "<p style='color: red;'>As senhas não coincidem.</p>";
+            } else {
                 $senha_hash = password_hash($nova_senha, PASSWORD_DEFAULT);
                 $update_senha_sql = "UPDATE usuarios SET Senha = ? WHERE id = ?";
                 $stmt_senha = $conn->prepare($update_senha_sql);
@@ -62,12 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
                 $stmt_senha->close();
             }
-        } else {
-            echo "<p>Erro ao atualizar os dados: " . $stmt->error . "</p>";
         }
-
-        $stmt->close();
+    } else {
+        echo "<p>Erro ao atualizar os dados: " . $stmt->error . "</p>";
     }
+
+    $stmt->close();
 }
 ?>
 
@@ -106,10 +110,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label>Cargo:</label>
                 <input type="text" name="cargo" value="<?php echo htmlspecialchars($user['Cargo'] ?? ''); ?>" required>
 
-                <!-- Campos para alteração de senha -->
+                <label>Setor:</label>
+                <input type="text" name="setor" value="<?php echo htmlspecialchars($user['setor'] ?? ''); ?>" required>
+
+                <!-- Campos para alteração de senha (opcionais) -->
                 <label>Senha Atual:</label>
                 <div class="password-container">
-                    <input type="password" id="senha_atual" name="senha_atual" placeholder="Digite a senha atual" required>
+                    <input type="password" id="senha_atual" name="senha_atual" placeholder="Digite a senha atual">
                     <span class="eye-icon" onclick="togglePasswordVisibility('senha_atual')">
                         <i class="fas fa-eye"></i>
                     </span>

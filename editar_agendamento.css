@@ -1,0 +1,91 @@
+/* editar_agendamento.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e8f4fa; /* Azul claro para o fundo da página */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 500px;
+}
+
+header h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #2d3a57; /* Azul escuro para o título */
+}
+
+.form-editar {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    color: #2d3a57; /* Azul escuro para os rótulos */
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #b3c7e6; /* Azul claro para a borda */
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f3f8fd; /* Azul muito claro para o fundo dos campos */
+    color: #333; /* Cor escura para o texto */
+}
+
+input[type="date"] {
+    padding: 8px;
+}
+
+button {
+    background-color: #007bff; /* Azul intenso para o botão */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
+}
+
+.btn-voltar {
+    display: inline-block;
+    text-align: center;
+    margin-top: 10px;
+    text-decoration: none;
+    background-color: #ff5b5b; /* Cor de botão vermelha para voltar */
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.btn-voltar:hover {
+    background-color: #e04f4f; /* Tom mais escuro ao passar o mouse */
+}

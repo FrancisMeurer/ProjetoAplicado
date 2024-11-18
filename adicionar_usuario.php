@@ -2,7 +2,11 @@
 include 'conexao.php';
 
 // Variáveis para manter os valores preenchidos pelo usuário
-$nome = $sobrenome = $email_address = $cargo = $telefone = $sexo = $data_nascimento = $observacao = '';
+$nome = $sobrenome = $email_address = $cargo = $telefone = $sexo = $data_nascimento = $observacao = $setor = '';
+$is_gestor = 0; // Valor padrão (não é gestor)
+
+// Variáveis para o cadastro de um novo setor
+$novo_setor = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Coleta os dados do formulário
@@ -14,12 +18,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sexo = $_POST['sexo'] ?? '';
     $data_nascimento = $_POST['data_nascimento'] ?? '';
     $observacao = $_POST['observacao'] ?? ''; // Coletando observação
+    $setor = $_POST['setor'] ?? ''; // Coletando o setor
+    $novo_setor = $_POST['novo_setor'] ?? ''; // Coletando novo setor
+    $is_gestor = isset($_POST['gestor']) ? 1 : 0; // Se o checkbox de gestor estiver marcado
 
     // Verifica se o campo "email_address" está vazio ou ausente
     if (empty($email_address)) {
         echo "O campo E-mail é obrigatório!<br>";
         // Exibe o formulário novamente com os dados preenchidos
-        exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_nascimento, $observacao);
+        exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_nascimento, $observacao, $setor, $is_gestor, $novo_setor);
         exit;
     }
 
@@ -31,9 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt_check->store_result();
 
     if ($stmt_check->num_rows > 0) {
-        // Exibe o formulário novamente e ativa o popup
         echo "<script>alert('Erro: Já existe um usuário cadastrado com o nome \"$nome\".');</script>";
-        exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_nascimento, $observacao);
+        exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_nascimento, $observacao, $setor, $is_gestor, $novo_setor);
         $stmt_check->close();
         exit;
     }
@@ -44,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!$data_formatada) {
         echo "A data fornecida está no formato errado. Por favor, use o formato DD/MM/AAAA.<br>";
-        exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_nascimento, $observacao);
+        exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_nascimento, $observacao, $setor, $is_gestor, $novo_setor);
         exit;
     }
 
@@ -62,12 +68,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Criptografa a senha utilizando PASSWORD_BCRYPT
     $senha_criptografada = password_hash($senha, PASSWORD_BCRYPT);
 
+    // Se um novo setor foi fornecido, ele será adicionado diretamente à variável $setor
+    if (!empty($novo_setor)) {
+        $setor = $novo_setor;
+    }
+
     // Insere os dados no banco de dados
-    $sql = "INSERT INTO usuarios (nome, sobrenome, email_address, cargo, telefone, sexo, data_nascimento, senha) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO usuarios (nome, sobrenome, email_address, cargo, telefone, sexo, data_nascimento, senha, setor, gestor) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssss", $nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_formatada, $senha_criptografada);
+    $stmt->bind_param("sssssssssi", $nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_formatada, $senha_criptografada, $setor, $is_gestor);
 
     if ($stmt->execute()) {
         // Redireciona para a página sucesso.php e passa as informações via URL
@@ -76,17 +87,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         echo "<script>alert('Erro ao cadastrar o usuário: " . $stmt->error . "');</script>";
     }
-    
 
     $stmt->close();
     $conn->close();
 } else {
     // Exibe o formulário se não houver envio
-    exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_nascimento, $observacao);
+    exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_nascimento, $observacao, $setor, $is_gestor, $novo_setor);
 }
 
 // Função para exibir o formulário com dados preenchidos
-function exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_nascimento, $observacao) {
+function exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, $sexo, $data_nascimento, $observacao, $setor, $is_gestor, $novo_setor) {
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -95,12 +105,6 @@ function exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Funcionários</title>
     <link rel="stylesheet" href="cadastro.css">
-    <script>
-        // Função para exibir o popup
-        function exibirPopup(msg) {
-            alert(msg);
-        }
-    </script>
 </head>
 <body>
     <div class="form-container">
@@ -129,6 +133,12 @@ function exibirFormulario($nome, $sobrenome, $email_address, $cargo, $telefone, 
 
                 <label for="telefone">Telefone</label>
                 <input type="tel" id="telefone" name="telefone" required placeholder="Telefone" value="<?php echo htmlspecialchars($telefone); ?>">
+
+                <label for="novo_setor">Cadastrar um novo setor</label>
+                <input type="text" id="novo_setor" name="novo_setor" placeholder="Novo setor" value="<?php echo htmlspecialchars($novo_setor); ?>" required>
+
+                <label for="gestor">É um gestor?</label>
+                <input type="checkbox" id="gestor" name="gestor" <?php echo ($is_gestor == 1 ? 'checked' : ''); ?>>
             </div>
             <div class="right-panel">
                 <div class="photo-preview">

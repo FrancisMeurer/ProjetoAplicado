@@ -9,7 +9,46 @@ if (!isset($_SESSION['user_email']) || !isset($_SESSION['user_cargo'])) {
 
 $user_email = $_SESSION['user_email'];
 $user_cargo = $_SESSION['user_cargo'];
+
+// Conexão com o banco de dados
+include 'conexao.php';
+
+// Verificar se o usuário é gestor
+$is_gestor = false;
+$gestor_check_query = "SELECT gestor FROM usuarios WHERE email_address = '$user_email'";
+$gestor_check_result = $conn->query($gestor_check_query);
+
+if ($gestor_check_result && $gestor_check_result->num_rows > 0) {
+    $gestor_data = $gestor_check_result->fetch_assoc();
+    $is_gestor = ($gestor_data['gestor'] == 1);
+}
+
+// Obter a lista de gestores
+$gestores = [];
+$gestor_query = "SELECT id, nome FROM usuarios WHERE gestor = 1";
+$gestor_result = $conn->query($gestor_query);
+if ($gestor_result->num_rows > 0) {
+    while ($gestor_row = $gestor_result->fetch_assoc()) {
+        $gestores[] = $gestor_row;
+    }
+}
+
+// Verificar se um filtro foi aplicado
+$filter_gestor_id = isset($_GET['filter_gestor']) ? $_GET['filter_gestor'] : '';
+
+// Consulta para buscar as atualizações mais recentes com filtro
+$sql = "SELECT a.data_inicio, a.data_termino_real, a.gestor, a.curso, a.funcionario, a.status,
+               u.nome AS nome_gestor, f.nome AS nome_funcionario, c.nome_curso
+        FROM agendamentos a
+        LEFT JOIN usuarios u ON a.gestor = u.id
+        LEFT JOIN usuarios f ON a.funcionario = f.id
+        LEFT JOIN cursos c ON a.curso = c.id
+        " . ($filter_gestor_id ? "WHERE a.gestor = '$filter_gestor_id'" : "") . "
+        ORDER BY a.data_inicio DESC LIMIT 5";
+
+$result = $conn->query($sql);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -30,22 +69,22 @@ $user_cargo = $_SESSION['user_cargo'];
                 <span>Início</span>
             </a>
 
-            <!-- Exibir "Cadastros" apenas para cargos permitidos -->
-            <?php if (in_array($user_cargo, ['T.i', 'Gerente', 'Supervisor'])): ?>
+            <!-- Exibir os botões apenas se o usuário for gestor -->
+            <?php if ($is_gestor): ?>
                 <a href="lista.php" class="icon">
                     <i class="fas fa-user"></i>
-                    <span>Cadastros</span>
+                    <span>Cadastro de Usuários</span>
+                </a>
+                <a href="lista_cursos.php" class="icon">
+                    <i class="fas fa-book"></i>
+                    <span>Cadastro de Cursos</span>
+                </a>
+                <a href="lista_agendamentos.php" class="icon">
+                    <i class="fas fa-clock"></i>
+                    <span>Agendamentos</span>
                 </a>
             <?php endif; ?>
 
-            <a href="#" class="icon">
-                <i class="fas fa-book"></i>
-                <span>Cursos</span>
-            </a>
-            <a href="#" class="icon">
-                <i class="fas fa-clock"></i>
-                <span>Horários</span>
-            </a>
             <a href="Logout.php" class="icon logout">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Sair</span>
@@ -63,12 +102,28 @@ $user_cargo = $_SESSION['user_cargo'];
             </header>
 
             <section class="updates">
-                <h2>Atualizações Recentes</h2>
+                <div class="updates-header">
+                    <h2>Atualizações Recentes</h2>
+
+                    <!-- Filtro para nome do gestor -->
+                    <form method="GET" action="" class="filter-form">
+                        <select name="filter_gestor" class="filter-select">
+                            <option value="">Selecione o Gestor</option>
+                            <?php foreach ($gestores as $gestor): ?>
+                                <option value="<?php echo $gestor['id']; ?>" <?php echo ($filter_gestor_id == $gestor['id']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($gestor['nome']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button type="submit" class="btn">Filtrar</button>
+                    </form>
+                </div>
+
                 <table>
                     <thead>
                         <tr>
                             <th>Data</th>
-                            <th>Hora</th>
+                            <th>Data de Conclusão</th>
                             <th>Gestor</th>
                             <th>Curso</th>
                             <th>Funcionário</th>
@@ -76,14 +131,28 @@ $user_cargo = $_SESSION['user_cargo'];
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>14/11/2024</td>
-                            <td>21:37</td>
-                            <td>Glaucio</td>
-                            <td>Ponte rolante</td>
-                            <td>Glauber Ferreira</td>
-                            <td>Em andamento</td>
-                        </tr>
+                        <?php
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $data_inicio = date('d/m/Y', strtotime($row['data_inicio']));
+                                $data_termino_real = $row['data_termino_real'] ? date('d/m/Y', strtotime($row['data_termino_real'])) : 'Em andamento';
+                                if ($row['status'] != 'Finalizado') {
+                                    $data_termino_real = 'Em andamento';
+                                }
+
+                                echo "<tr>";
+                                echo "<td>" . $data_inicio . "</td>";
+                                echo "<td>" . $data_termino_real . "</td>";
+                                echo "<td>" . $row['nome_gestor'] . "</td>";
+                                echo "<td>" . $row['nome_curso'] . "</td>";
+                                echo "<td>" . $row['nome_funcionario'] . "</td>";
+                                echo "<td>" . $row['status'] . "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='6'>Nenhuma atualização recente.</td></tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
             </section>
