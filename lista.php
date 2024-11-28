@@ -6,6 +6,7 @@ $id = $_GET['id'] ?? '';
 $nome = $_GET['nome'] ?? '';
 $cargo = $_GET['cargo'] ?? '';
 $setor = $_GET['setor'] ?? '';
+$limite = $_GET['limite'] ?? 10; // Definir o limite padrão como 10
 
 // Obter lista de cargos distintos do banco de dados
 $cargos_sql = "SELECT DISTINCT cargo FROM usuarios ORDER BY cargo";
@@ -34,6 +35,10 @@ if (!empty($setor)) {
     $sql .= " AND setor = '" . $conn->real_escape_string($setor) . "'";
 }
 
+// Limitar o número de resultados de acordo com a seleção do usuário
+$sql .= " LIMIT " . intval($limite);
+
+// Executar a consulta
 $result = $conn->query($sql);
 ?>
 
@@ -89,6 +94,16 @@ $result = $conn->query($sql);
                     ?>
                 </select>
             </div>
+            <div>
+                <label for="limite">Quantidade por página:</label>
+                <select name="limite" id="limite">
+                    <option value="5" <?php echo ($limite == 5) ? 'selected' : ''; ?>>5</option>
+                    <option value="10" <?php echo ($limite == 10) ? 'selected' : ''; ?>>10</option>
+                    <option value="20" <?php echo ($limite == 20) ? 'selected' : ''; ?>>20</option>
+                    <option value="30" <?php echo ($limite == 30) ? 'selected' : ''; ?>>30</option>
+                    <option value="50" <?php echo ($limite == 50) ? 'selected' : ''; ?>>50</option>
+                </select>
+            </div>
             <button type="submit" class="btn">Filtrar</button>
             <a href="lista.php" class="btn reset-btn">Limpar Filtros</a>
         </form>
@@ -101,39 +116,41 @@ $result = $conn->query($sql);
         </div>
 
         <!-- Tabela de resultados -->
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Sobrenome</th>
-                    <th>E-mail</th>
-                    <th>Cargo</th>
-                    <th>Setor</th> <!-- Adicionado setor -->
-                    <th>Editar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result && $result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row['id'] . "</td>";
-                        echo "<td>" . $row['nome'] . "</td>";
-                        echo "<td>" . $row['sobrenome'] . "</td>";
-                        echo "<td>" . $row['email_address'] . "</td>";
-                        echo "<td>" . $row['cargo'] . "</td>";
-                        echo "<td>" . $row['setor'] . "</td>"; // Exibindo setor
-                        echo "<td><a href='editar_usuario.php?id=" . $row['id'] . "'><i class='fas fa-pencil-alt'></i></a></td>";
-                        echo "</tr>";
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Sobrenome</th>
+                        <th>E-mail</th>
+                        <th>Cargo</th>
+                        <th>Setor</th> 
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($result && $result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row['id'] . "</td>";
+                            echo "<td>" . $row['nome'] . "</td>";
+                            echo "<td>" . $row['sobrenome'] . "</td>";
+                            echo "<td>" . $row['email_address'] . "</td>";
+                            echo "<td>" . $row['cargo'] . "</td>";
+                            echo "<td>" . $row['setor'] . "</td>"; 
+                            echo "<td><a href='editar_usuario.php?id=" . $row['id'] . "'><i class='fas fa-pencil-alt'></i></a></td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='7'>Nenhum usuário encontrado.</td></tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='7'>Nenhum usuário encontrado.</td></tr>";
-                }
-                $conn->close();
-                ?>
-            </tbody>
-        </table>
+                    $conn->close();
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <style>
@@ -175,6 +192,48 @@ $result = $conn->query($sql);
         }
         td a i:hover {
             color: #0056b3;
+        }
+
+        /* Envolvendo a tabela em um contêiner com rolagem horizontal */
+        .table-wrapper {
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch;
+            margin-top: 20px; /* Adicionando margem superior para afastar da parte superior */
+        }
+
+        /* Tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            word-wrap: break-word; 
+        }
+
+        th {
+            background-color: #f1f1f1;
+        }
+
+        /* Media Queries para dispositivos móveis */
+        @media (max-width: 768px) {
+            /* Rolagem horizontal para tabela */
+            .table-wrapper {
+                overflow-x: auto; 
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                width: 100%;
+                min-width: 600px; /* Impede que a tabela fique muito pequena */
+            }
+
+            table th, table td {
+                font-size: 0.9em; /* Ajusta a fonte para melhor visualização em telas pequenas */
+            }
         }
     </style>
 </body>

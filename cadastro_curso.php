@@ -45,7 +45,7 @@ $setores_result = $conn->query($setores_sql);
 
         <!-- Formulário de Cadastro -->
         <form method="POST">
-            <label for="nome_curso">Nome do Curso em:</label>
+            <label for="nome_curso">Nome do Curso:</label>
             <input type="text" id="nome_curso" name="nome_curso" required>
 
             <label for="carga_horaria">Carga Horária em Horas:</label>

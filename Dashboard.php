@@ -36,19 +36,23 @@ if ($gestor_result->num_rows > 0) {
 // Verificar se um filtro foi aplicado
 $filter_gestor_id = isset($_GET['filter_gestor']) ? $_GET['filter_gestor'] : '';
 
-// Consulta para buscar as atualizações mais recentes com filtro
+// Definir o número de linhas a exibir por página
+$rows_per_page = isset($_GET['rows_per_page']) ? (int)$_GET['rows_per_page'] : 5;
+$rows_per_page = in_array($rows_per_page, [5, 10, 15, 20, 50]) ? $rows_per_page : 5;
+
+// Consulta para buscar as atualizações recentes com filtro e limite
 $sql = "SELECT a.data_inicio, a.data_termino_real, a.gestor, a.curso, a.funcionario, a.status,
-               u.nome AS nome_gestor, f.nome AS nome_funcionario, c.nome_curso
+               CONCAT(u.nome, ' ', u.sobrenome) AS nome_gestor, f.nome AS nome_funcionario, c.nome_curso
         FROM agendamentos a
         LEFT JOIN usuarios u ON a.gestor = u.id
         LEFT JOIN usuarios f ON a.funcionario = f.id
         LEFT JOIN cursos c ON a.curso = c.id
         " . ($filter_gestor_id ? "WHERE a.gestor = '$filter_gestor_id'" : "") . "
-        ORDER BY a.data_inicio DESC LIMIT 5";
+        ORDER BY a.data_inicio DESC
+        LIMIT $rows_per_page";
 
 $result = $conn->query($sql);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -56,12 +60,24 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="Dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="Dashboard.css">
+    <script>
+        // Detectar se é um dispositivo móvel
+        function isMobile() {
+            return /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+        }
+
+        // Adicionar classe ao body se for móvel
+        window.onload = function() {
+            if (isMobile()) {
+                document.body.classList.add('mobile');
+            }
+        };
+    </script>
 </head>
 <body>
     <div class="container">
-        <!-- Barra lateral -->
         <div class="sidebar">
             <h2>Menu</h2>
             <a href="#" class="icon">
@@ -69,7 +85,6 @@ $result = $conn->query($sql);
                 <span>Início</span>
             </a>
 
-            <!-- Exibir os botões apenas se o usuário for gestor -->
             <?php if ($is_gestor): ?>
                 <a href="lista.php" class="icon">
                     <i class="fas fa-user"></i>
@@ -91,7 +106,6 @@ $result = $conn->query($sql);
             </a>
         </div>
 
-        <!-- Conteúdo principal -->
         <div class="main-content">
             <header>
                 <h1>Bem-vindo ao Dashboard</h1>
@@ -104,8 +118,6 @@ $result = $conn->query($sql);
             <section class="updates">
                 <div class="updates-header">
                     <h2>Atualizações Recentes</h2>
-
-                    <!-- Filtro para nome do gestor -->
                     <form method="GET" action="" class="filter-form">
                         <select name="filter_gestor" class="filter-select">
                             <option value="">Selecione o Gestor</option>
@@ -115,6 +127,16 @@ $result = $conn->query($sql);
                                 </option>
                             <?php endforeach; ?>
                         </select>
+
+                        <!-- Adicionar o seletor para o número de linhas -->
+                        <select name="rows_per_page" class="filter-select">
+                            <option value="5" <?php echo ($rows_per_page == 5) ? 'selected' : ''; ?>>5</option>
+                            <option value="10" <?php echo ($rows_per_page == 10) ? 'selected' : ''; ?>>10</option>
+                            <option value="15" <?php echo ($rows_per_page == 15) ? 'selected' : ''; ?>>15</option>
+                            <option value="20" <?php echo ($rows_per_page == 20) ? 'selected' : ''; ?>>20</option>
+                            <option value="50" <?php echo ($rows_per_page == 50) ? 'selected' : ''; ?>>50</option>
+                        </select>
+
                         <button type="submit" class="btn">Filtrar</button>
                     </form>
                 </div>
@@ -122,7 +144,7 @@ $result = $conn->query($sql);
                 <table>
                     <thead>
                         <tr>
-                            <th>Data</th>
+                            <th>Data Início</th>
                             <th>Data de Conclusão</th>
                             <th>Gestor</th>
                             <th>Curso</th>

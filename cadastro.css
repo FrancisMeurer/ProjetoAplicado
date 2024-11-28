@@ -1,10 +1,13 @@
 body {
     background: linear-gradient(to right, #a1c4fd, #c2e9fb);
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 .form-container {
     width: 90%;
+    max-width: 1200px; /* Limite de largura para não expandir demais */
     margin: auto;
     padding: 20px;
     background: #e0f7fa;
@@ -23,14 +26,18 @@ h1 {
 
 form {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap; /* Permite que os itens se ajustem em múltiplas linhas */
+    justify-content: space-between;
+}
+
+.left-panel, .right-panel {
+    width: 100%; /* Responsivo em telas pequenas */
+    margin-bottom: 20px; /* Espaço entre as colunas */
 }
 
 .left-panel {
-    width: 60%;
     display: flex;
-    flex-direction: column; /* Organiza os campos de entrada em coluna */
+    flex-direction: column;
 }
 
 .left-panel label {
@@ -39,7 +46,8 @@ form {
 }
 
 .left-panel input,
-.left-panel select {
+.left-panel select,
+textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -47,7 +55,6 @@ form {
     border: 1px solid #0288d1;
 }
 
-/* Estilos para a caixa de seleção (checkbox) do Gestor */
 .checkbox-container {
     display: flex;
     align-items: center;
@@ -63,18 +70,11 @@ form {
     font-size: 14px;
 }
 
-.checkbox-container .note {
-    color: #757575;
-    font-size: 12px;
-    margin-left: 10px;
-}
-
-/* Painel direito (para a foto) */
 .right-panel {
-    width: 35%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 .photo-preview {
@@ -110,18 +110,11 @@ form {
     display: none;
 }
 
-/* Campo de Observação ajustado para ficar abaixo do telefone */
 textarea {
-    width: 100%;
     height: 100px;
     margin-top: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #0288d1;
-    margin-bottom: 10px; /* Espaçamento abaixo do campo de observação */
 }
 
-/* Botões fixados na parte inferior da tela */
 .button-group {
     display: flex;
     flex-direction: column;
@@ -151,31 +144,43 @@ button {
     color: black;
 }
 
-/* Estilos para o novo campo de setor */
-.setor-container {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .left-panel {
+        width: 100%; /* Ajusta o painel esquerdo para ocupar toda a largura */
+    }
+
+    .right-panel {
+        width: 100%; /* Ajusta o painel direito para ocupar toda a largura */
+        text-align: center;
+    }
+
+    .photo-preview {
+        width: 150px;
+        height: 150px;
+    }
+
+    .button-group button {
+        width: 100%; /* Botões ocupam a largura total em telas menores */
+    }
 }
 
-.setor-container select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #0288d1;
-}
+/* Responsividade para telas muito pequenas (por exemplo, smartphones) */
+@media (max-width: 480px) {
+    .form-container {
+        padding: 15px;
+    }
 
-.setor-container .new-setor-button {
-    background-color: #0288d1;
-    color: white;
-    padding: 8px;
-    text-align: center;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 5px;
-}
+    header h1 {
+        font-size: 18px; /* Tamanho menor para o título */
+    }
 
-.setor-container .new-setor-button:hover {
-    background-color: #0277bd;
+    .left-panel input, .left-panel select, textarea {
+        padding: 8px; /* Ajuste no padding para campos de entrada */
+    }
+
+    .photo-preview {
+        width: 120px;
+        height: 120px;
+    }
 }

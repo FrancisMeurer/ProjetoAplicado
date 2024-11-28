@@ -14,7 +14,9 @@ $id = $_GET['id'];
 // Consultar os dados do agendamento
 $sql = "SELECT a.id, a.gestor, a.data_inicio, a.data_termino_prev, 
                a.funcionario, a.curso, a.cargo, a.setor, a.status, 
-               u.nome AS nome_gestor, f.nome AS nome_funcionario, c.nome_curso
+               u.nome AS nome_gestor, u.sobrenome AS sobrenome_gestor, 
+               f.nome AS nome_funcionario, f.sobrenome AS sobrenome_funcionario, 
+               c.nome_curso
         FROM agendamentos a
         LEFT JOIN usuarios u ON a.gestor = u.id
         LEFT JOIN usuarios f ON a.funcionario = f.id
@@ -85,11 +87,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <select name="gestor" id="gestor" required>
                     <option value="">Selecione</option>
                     <?php
-                    $gestores_sql = "SELECT id, nome FROM usuarios WHERE gestor = 1";
+                    $gestores_sql = "SELECT id, nome, sobrenome FROM usuarios WHERE gestor = 1";
                     $gestores_result = $conn->query($gestores_sql);
                     while ($gestor_row = $gestores_result->fetch_assoc()) {
                         $selected = ($gestor_row['id'] == $row['gestor']) ? 'selected' : '';
-                        echo "<option value='" . $gestor_row['id'] . "' $selected>" . $gestor_row['nome'] . "</option>";
+                        // Exibir nome e sobrenome
+                        echo "<option value='" . $gestor_row['id'] . "' $selected>" . $gestor_row['nome'] . " " . $gestor_row['sobrenome'] . "</option>";
                     }
                     ?>
                 </select>
@@ -100,11 +103,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <select name="funcionario" id="funcionario" required>
                     <option value="">Selecione</option>
                     <?php
-                    $funcionarios_sql = "SELECT id, nome FROM usuarios WHERE gestor = 0";
-                    $funcionarios_result = $conn->query($funcionarios_sql);
-                    while ($funcionario_row = $funcionarios_result->fetch_assoc()) {
-                        $selected = ($funcionario_row['id'] == $row['funcionario']) ? 'selected' : '';
-                        echo "<option value='" . $funcionario_row['id'] . "' $selected>" . $funcionario_row['nome'] . "</option>";
+                    // Consulta para obter todos os usuários (gestores e não gestores)
+                    $usuarios_sql = "SELECT id, nome, sobrenome FROM usuarios";
+                    $usuarios_result = $conn->query($usuarios_sql);
+                    while ($usuario_row = $usuarios_result->fetch_assoc()) {
+                        // Verificar se o ID do usuário é o mesmo que o do funcionário no agendamento
+                        $selected = ($usuario_row['id'] == $row['funcionario']) ? 'selected' : '';
+                        // Exibir nome e sobrenome
+                        echo "<option value='" . $usuario_row['id'] . "' $selected>" . $usuario_row['nome'] . " " . $usuario_row['sobrenome'] . "</option>";
                     }
                     ?>
                 </select>

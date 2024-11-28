@@ -1,17 +1,30 @@
+/* Estilo global */
 body {
     background: linear-gradient(to right, #a1c4fd, #c2e9fb);
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+/* Aplica box-sizing a todos os elementos */
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+/* Contêiner principal do formulário */
 .form-container {
-    width: 80%;
-    margin: auto;
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
     padding: 20px;
-    background: #e0f7fa;
+    background: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
+/* Cabeçalho */
 header {
     text-align: center;
     margin-bottom: 20px;
@@ -19,77 +32,75 @@ header {
 
 h1 {
     color: #0288d1;
+    font-size: 1.8rem;
 }
 
+/* Formulário */
 form {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.left-panel {
-    width: 60%;
-    display: flex;
     flex-direction: column;
+    gap: 15px;
 }
 
+/* Estilo dos inputs e labels */
 .left-panel label {
-    display: block;
+    font-weight: bold;
+    color: #333;
     margin-bottom: 5px;
 }
 
 .left-panel input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 12px;
     border-radius: 5px;
     border: 1px solid #0288d1;
+    font-size: 1rem;
 }
 
+/* Botões */
 .button-group {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    width: 100%;
+    gap: 10px;
     margin-top: 20px;
 }
 
 button, .delete {
-    padding: 10px 10px;
+    padding: 12px;
     border: none;
     border-radius: 5px;
-    color: white;
-    width: 48%;
+    font-weight: bold;
+    font-size: 1rem;
+    width: 100%; /* Ajusta para largura total */
+    text-align: center;
 }
 
+/* Botão Salvar */
 .save {
     background-color: #4caf50;
+    color: white;
 }
 
-
+/* Botão Voltar */
 .delete {
-    background-color: #f44336; 
-    text-align: center;
-    display: inline-block;
-    width: 100%;
+    background-color: #f44336;
+    color: white;
     text-decoration: none;
 }
 
 .delete:hover {
-    background-color: #f44336; 
+    background-color: #e53935;
 }
 
-/* Estilo do contêiner de senha com ícone */
+/* Contêiner de senha com ícone */
 .password-container {
     position: relative;
     width: 100%;
 }
 
 .password-container input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #0288d1;
+    padding-right: 40px; /* Espaço para o ícone */
 }
 
 .eye-icon {
@@ -105,30 +116,41 @@ button, .delete {
     font-size: 20px;
 }
 
-/* Estilo para o botão salvar e voltar */
-.save, .delete {
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-weight: bold;
-    width: 100%;
+/* Estilo responsivo para dispositivos móveis */
+@media (max-width: 768px) {
+    .form-container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    .left-panel input {
+        font-size: 0.9rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    button, .delete {
+        width: 100%; /* Botões ocupam toda a largura no mobile */
+    }
 }
 
-.save {
-    background-color: #4caf50;
-    color: white;
-}
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.4rem;
+    }
 
-.delete {
-    background-color: #f44336;
-    color: white;
-}
+    .left-panel input {
+        font-size: 0.85rem;
+    }
 
-.delete:hover {
-    background-color: #f44336; /* Manter a cor vermelha */
-}
-
-.button-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
+    .button-group {
+        gap: 10px;
+    }
 }
